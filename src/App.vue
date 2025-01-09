@@ -103,7 +103,8 @@ const copyName = (name) => {
   alertDiv.id = 'copy';
   alertDiv.style.position = 'fixed';
   alertDiv.style.bottom = '10px';
-  alertDiv.innerHTML = tempClipboard.value;
+  alertDiv.innerHTML = tempClipboard.value.replace(/\n/g, '<br>');
+  console.log(alertDiv.innerHTML);
   document.body.appendChild(alertDiv);
 
   // Trigger reflow to apply the transition
