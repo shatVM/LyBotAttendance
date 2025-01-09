@@ -89,6 +89,40 @@ const getTabClass = (grade) => {
   return tab && tab.isActive ? activeClass : ''
 }
 
+let tempClipboard = ref('')
+
+const copyName = (name) => {
+  let a = document.getElementById('copy');
+  if (a){
+    document.body.removeChild(a);
+  }
+  tempClipboard.value += `\n${name}`
+  navigator.clipboard.writeText(tempClipboard.value)
+  const alertDiv = document.createElement('div');
+  alertDiv.className = 'alert has-mb-none';
+  alertDiv.id = 'copy';
+  alertDiv.style.position = 'fixed';
+  alertDiv.style.bottom = '10px';
+  alertDiv.innerHTML = `Скопійовано ${name} в буфер обміну`;
+  document.body.appendChild(alertDiv);
+
+  // Trigger reflow to apply the transition
+  requestAnimationFrame(() => {
+    alertDiv.classList.add('show');
+  });
+
+  setTimeout(() => {
+    a = document.getElementById('copy');
+    if (a){
+      a.classList.remove('show');
+      document.body.removeChild(a);
+    }
+  }, 3000);
+}
+
+const clearBufer = () => {
+  tempClipboard.value = ''
+}
 </script>
 
 <template>
@@ -132,15 +166,22 @@ const getTabClass = (grade) => {
       <thead>
         <tr>
           <th class="has-p-2">№</th>
-          <th class="has-p-2">{{ groupName }}</th>
+          <th class="has-p-2">
+            <span @click="clearBufer(); copyName(groupName)">{{ groupName }}</span>
+            <div style="float: right;">
+              <span style="cursor: pointer;" @click="copyName('Відсутні:')">❌</span>
+              <span style="cursor: pointer;" @click="copyName('Прийшли:')">✅</span>
+            </div>
+          </th>
           <th class="has-p-2">Статус</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="student in tab.data[groupName]">
           <td class="has-p-2">{{ student.number }}</td>
-          <td class="has-p-2" style="display: flex; align-items: center;">
+          <td class="has-p-2" style="display: flex; align-items: center;" @click="copyName(student.name)">
             {{ student.name }}
+    
           </td>
           <td class="has-p-2 has-text-center tooltip">
             <i :class="statuses[student.status][0]" style="font-size: 20px;"
@@ -152,3 +193,12 @@ const getTabClass = (grade) => {
     </table>
   </div>
 </template>
+<style>
+  .alert {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 0;
+  }
+  .alert.show {
+    opacity: 1;
+  }
+</style>
