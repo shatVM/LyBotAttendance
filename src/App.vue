@@ -103,7 +103,7 @@ const copyName = (name) => {
   alertDiv.id = 'copy';
   alertDiv.style.position = 'fixed';
   alertDiv.style.bottom = '10px';
-  alertDiv.innerHTML = `Скопійовано ${name} в буфер обміну`;
+  alertDiv.innerHTML = tempClipboard.value;
   document.body.appendChild(alertDiv);
 
   // Trigger reflow to apply the transition
