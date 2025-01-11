@@ -70,12 +70,14 @@ const startAutoUpdate = () => {
 onMounted(() => {
   fetchData()
   startAutoUpdate()
+  window.addEventListener('keydown', handleKeyDown);
 })
 
 onBeforeUnmount(() => {
   if (intervalId) {
     clearInterval(intervalId)
   }
+  window.removeEventListener('keydown', handleKeyDown);
 })
 
 const activeClass = reactive({
@@ -123,6 +125,17 @@ const copyName = (name) => {
 
 const clearBufer = () => {
   tempClipboard.value = ''
+}
+
+const isCustomCursor = ref(false)
+
+const handleKeyDown = (event) => {
+  if (event.ctrlKey && event.shiftKey) {
+    isCustomCursor.value = !isCustomCursor.value
+    document.body.style.cursor = isCustomCursor.value 
+      ? 'url(http://www.rw-designer.com/cursor-extern.php?id=14256), auto'
+      : 'default'
+  }
 }
 </script>
 
@@ -201,5 +214,9 @@ const clearBufer = () => {
   }
   .alert.show {
     opacity: 1;
+  }
+
+  body.custom-cursor {
+    cursor: url(http://www.rw-designer.com/cursor-extern.php?id=14256), auto;
   }
 </style>
