@@ -1,6 +1,7 @@
 <script setup>
 import axios from 'axios'
 import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
+import altCursorePath from '@/assets/images/alternative.cur'
 
 const statuses = [
   ["si-check", "green", "В ліцеї"],
@@ -132,8 +133,9 @@ const isCustomCursor = ref(false)
 const handleKeyDown = (event) => {
   if (event.ctrlKey && event.shiftKey) {
     isCustomCursor.value = !isCustomCursor.value
+    
     document.body.style.cursor = isCustomCursor.value 
-      ? 'url(http://www.rw-designer.com/cursor-extern.php?id=14256), auto'
+      ? `url(${altCursorePath}), auto`
       : 'default'
   }
 }
