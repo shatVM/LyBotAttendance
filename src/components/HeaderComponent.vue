@@ -19,9 +19,8 @@ const dynamicGrade = computed(() => route.params.grade || attendanceStore.getGra
       :id="grade"
       class="tab has-text-center has-h-8 navlink"
       :class="{
-        active: dynamicGrade === grade && route.path !== '/settings',
-        'has-bg-white': dynamicGrade === grade && route.path !== '/settings',
-        'has-text-primary': dynamicGrade === grade && route.path !== '/settings',
+        'active has-bg-white has-text-primary':
+          dynamicGrade === grade && route.path !== '/settings',
       }"
       >{{ grade + '-ті класи' }}</RouterLink
     >
