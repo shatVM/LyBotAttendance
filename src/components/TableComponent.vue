@@ -11,10 +11,26 @@ const groupData = computed(() => {
 })
 
 const statuses = [
-  ['si-check', 'green', 'В ліцеї'],
-  ['si-rocket', 'black', 'В дорозі'],
-  ['si-clock', 'blue', 'Запізниться'],
-  ['si-x', 'red', 'Вдома'],
+  {
+    class: 'si-check',
+    color: 'green',
+    text: 'В ліцеї',
+  },
+  {
+    class: 'si-rocket',
+    color: 'black',
+    text: 'В дорозі',
+  },
+  {
+    class: 'si-clock',
+    color: 'blue',
+    text: 'Запізниться',
+  },
+  {
+    class: 'si-x',
+    color: 'red',
+    text: 'Вдома',
+  },
 ]
 </script>
 
@@ -35,11 +51,11 @@ const statuses = [
         <td class="has-p-2">{{ groupData[studentName].name }}</td>
         <td class="has-p-2 has-text-center tooltip">
           <i
-            :class="statuses[groupData[studentName].status][0]"
+            :class="statuses[groupData[studentName].status].class"
             style="font-size: 20px"
-            :style="{ color: statuses[groupData[studentName].status][1] }"
+            :style="{ color: statuses[groupData[studentName].status].color }"
           ></i>
-          <span class="tooltiptext">{{ statuses[groupData[studentName].status][2] }}</span>
+          <span class="tooltiptext">{{ statuses[groupData[studentName].status].text }}</span>
         </td>
       </tr>
     </tbody>
