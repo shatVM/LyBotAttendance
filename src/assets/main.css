@@ -1,3 +1,7 @@
+body {
+  overflow-x: hidden;
+}
+
 .tab {
   padding-top: 5px;
   padding-bottom: 0;
