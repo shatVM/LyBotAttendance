@@ -8,20 +8,12 @@ This template should help get you started developing with Vue 3 in Vite.
 
 ## Customize configuration
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+See [Vite Configuration Reference](https://vite.dev/config/).
 
 ## Project Setup
 
 ```sh
 npm install
-```
-
-### Create a .env File
-
-Create a `.env` file in the root of your project:
-
-```sh
-VITE_API_URL=https://lybotapi.onrender.com
 ```
 
 ### Compile and Hot-Reload for Development
@@ -34,4 +26,10 @@ npm run dev
 
 ```sh
 npm run build
+```
+
+### Lint with [ESLint](https://eslint.org/)
+
+```sh
+npm run lint
 ```
