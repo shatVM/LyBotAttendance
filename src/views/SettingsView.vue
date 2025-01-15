@@ -14,7 +14,7 @@ const settingsStore = useSettingsStore()
         :checked="settingsStore.getShowAvatars()"
         @change="settingsStore.setShowAvatars($event.target.checked)"
       />
-      Показувати аватари користувачів (працює не правильно)
+      Показувати аватари користувачів
     </label>
   </div>
 </template>
