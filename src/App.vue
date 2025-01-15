@@ -13,7 +13,6 @@ const fetchAttendanceData = async () => {
   try {
     const response = await axios.get(`${API_URL}/attendance`)
     attendanceStore.setAttendanceData(response.data)
-    console.log('Data fetched:', response.data)
   } catch (error) {
     console.error(error)
     alert('Помилка завантаження даних')
