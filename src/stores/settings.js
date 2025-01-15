@@ -2,22 +2,24 @@ import { ref } from 'vue'
 import { defineStore } from 'pinia'
 
 export const useSettingsStore = defineStore('settings', () => {
-  const theme = ref('light')
-
-  const toggleTheme = () => {
-    theme.value = theme.value === 'light' ? 'dark' : 'light'
-  }
-
   const showAvatars = ref(false)
 
-  const toggleShowAvatars = () => {
-    showAvatars.value = !showAvatars.value
+  const setShowAvatars = (value) => {
+    showAvatars.value = value
+    localStorage.setItem('showAvatars', JSON.stringify(value))
+  }
+
+  const getShowAvatars = () => {
+    let data = localStorage.getItem('showAvatars')
+    if (!data) {
+      return false
+    }
+    return JSON.parse(data)
   }
 
   return {
-    theme,
-    toggleTheme,
     showAvatars,
-    toggleShowAvatars,
+    setShowAvatars,
+    getShowAvatars,
   }
 })

@@ -2,11 +2,15 @@
 import { computed } from 'vue'
 import { useAttendanceStore } from '@/stores/attendanceData'
 import { useClipboardStore } from '@/stores/clipboard'
+import { useSettingsStore } from '@/stores/settings'
 
 const props = defineProps(['grade', 'groupName'])
 
 const attendanceStore = useAttendanceStore()
 const clipboardStore = useClipboardStore()
+const settingsStore = useSettingsStore() // Add settings store
+
+const showAvatars = computed(() => settingsStore.getShowAvatars())
 
 const groupData = computed(() => {
   return attendanceStore.getGroupAttendance(props.grade, props.groupName)
@@ -59,8 +63,14 @@ const statuses = [
     <tbody>
       <tr v-for="(studentName, index) in Object.keys(groupData)" :key="studentName">
         <td class="has-p-2">{{ index + 1 }}</td>
-        <td class="has-p-2" @click="clipboardStore.addToClipboard(studentName)">
-          {{ studentName }}
+        <td class="has-p-2 image-container" @click="clipboardStore.addToClipboard(studentName)">
+          <img
+            v-if="showAvatars"
+            :src="groupData[studentName].avatar_url"
+            :alt="studentName.charAt(0)"
+            loading="lazy"
+          />
+          <div style="margin-left: 5px">{{ studentName }}</div>
         </td>
         <td class="has-p-2 has-text-center tooltip">
           <i
