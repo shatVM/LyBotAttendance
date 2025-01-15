@@ -1,224 +1,37 @@
 <script setup>
+import { onMounted } from 'vue'
+import { RouterView } from 'vue-router'
 import axios from 'axios'
-import { ref, reactive, onMounted, onBeforeUnmount } from 'vue'
-import altCursorePath from '@/assets/images/alternative.cur'
 
-const statuses = [
-  ["si-check", "green", "В ліцеї"],
-  ["si-rocket", "black", "В дорозі"],
-  ["si-clock", "blue", "Запізниться"],
-  ["si-x", "red", "Вдома"],
-]
+import { useAttendanceStore } from './stores/attendanceData'
+import HeaderComponent from './components/HeaderComponent.vue'
 
 const API_URL = import.meta.env.VITE_API_URL
+const attendanceStore = useAttendanceStore()
 
-let grades = ref([])
-let tabs = ref([])
-let intervalId = null
-let settingsModal = ref(false)
-let modalData = ref({
-  header: "",
-  body: "",
-  isActive: false
-})
-
-const fetchData = async () => {
+const fetchAttendanceData = async () => {
   try {
-    const response = await axios.get(API_URL + "/attendance")
-    grades.value = Object.keys(response.data)
-    tabs.value = []
-    grades.value.forEach(grade => {
-      let data = response.data[grade]
-      Object.keys(data).forEach(gradeData => {
-        gradeData = data[gradeData]
-        Object.keys(gradeData).forEach((student, i) => {
-          student = gradeData[student]
-          student.number = i + 1
-        })
-      })
-      tabs.value.push({
-        grade: grade,
-        isActive: false,
-        data: data
-      })
-    })
-
-    let activeTab = sessionStorage.getItem("activeTab")
-    if (!activeTab) {
-      activeTab = tabs.value[0].grade
-    }
-
-    setActiveTab(activeTab)
+    const response = await axios.get(`${API_URL}/attendance`)
+    attendanceStore.setAttendanceData(response.data)
   } catch (error) {
-    console.error("Помилка при отриманні даних:", error)
+    console.error(error)
+    alert('Помилка завантаження даних')
   }
 }
 
-const setActiveTab = (grade) => {
-  tabs.value.forEach(tab => {
-    tab.isActive = tab.grade === grade
-  })
-  sessionStorage.setItem("activeTab", grade)
-}
-
-
 const startAutoUpdate = () => {
-  intervalId = setInterval(() => {
-    fetchData()
+  setInterval(() => {
+    fetchAttendanceData()
   }, 30000)
 }
 
 onMounted(() => {
-  fetchData()
+  fetchAttendanceData()
   startAutoUpdate()
-  window.addEventListener('keydown', handleKeyDown);
 })
-
-onBeforeUnmount(() => {
-  if (intervalId) {
-    clearInterval(intervalId)
-  }
-  window.removeEventListener('keydown', handleKeyDown);
-})
-
-const activeClass = reactive({
-  "active": true,
-  "has-bg-white": true,
-  "has-text-primary": true
-})
-
-const getTabClass = (grade) => {
-  const tab = tabs.value.find(tab => tab.grade === grade)
-  return tab && tab.isActive ? activeClass : ''
-}
-
-let tempClipboard = ref('')
-
-const copyName = (name) => {
-  let a = document.getElementById('copy');
-  if (a){
-    document.body.removeChild(a);
-  }
-  tempClipboard.value += `\n${name}`
-  navigator.clipboard.writeText(tempClipboard.value)
-  const alertDiv = document.createElement('div');
-  alertDiv.className = 'alert has-mb-none';
-  alertDiv.id = 'copy';
-  alertDiv.style.position = 'fixed';
-  alertDiv.style.bottom = '10px';
-  alertDiv.innerHTML = tempClipboard.value.replace(/\n/g, '<br>');
-  console.log(alertDiv.innerHTML);
-  document.body.appendChild(alertDiv);
-
-  // Trigger reflow to apply the transition
-  requestAnimationFrame(() => {
-    alertDiv.classList.add('show');
-  });
-
-  setTimeout(() => {
-    a = document.getElementById('copy');
-    if (a){
-      a.classList.remove('show');
-      document.body.removeChild(a);
-    }
-  }, 3000);
-}
-
-const clearBufer = () => {
-  tempClipboard.value = ''
-}
-
-const isCustomCursor = ref(false)
-
-const handleKeyDown = (event) => {
-  if (event.ctrlKey && event.shiftKey) {
-    isCustomCursor.value = !isCustomCursor.value
-    
-    document.body.style.cursor = isCustomCursor.value 
-      ? `url(${altCursorePath}), auto`
-      : 'default'
-  }
-}
 </script>
 
 <template>
-  <div class="scrim" v-if="modalData.isActive">
-    <div class="modal">
-      <div class="is-flex has-items-center">
-        <h4 class="has-mb-none has-mt-none">{{ modalData.header }}</h4>
-        <div class="close has-ml-auto" @click="modalData.isActive = false"></div>
-      </div>
-      <div class="has-pt-6" v-html="modalData.body"></div>
-    </div>
-  </div>
-
-  <div class="scrim setting" v-if="settingsModal">
-    <div class="modal">
-      <div class="is-flex has-items-center">
-        <h4 class="has-mb-none has-mt-none">Налаштування</h4>
-        <div class="close has-ml-auto" @click="settingsModal = false"></div>
-      </div>
-      <div class="has-pt-6">
-        Налаштування
-      </div>
-    </div>
-  </div>
-
-  <div class="tab-container is-flex has-direction-column-mobile has-bg-muted has-p-1">
-    <a v-for="tab in tabs" :key="tab.grade" @click="setActiveTab(tab.grade)" :id="tab.grade"
-      class="tab has-text-center has-h-8 navlink" :class="getTabClass(tab.grade)">
-      {{ tab.grade + "-ті класи" }}
-    </a>
-
-    <a @click="settingsModal = true" style="width: 50px; margin-left: 5px;"
-      class="tab has-text-center has-h-8 navlink has-bg-white has-text-primary">
-      <i class="si-hamburger"></i>
-    </a>
-
-  </div>
-  <div v-for="tab in tabs" :id="'grade-' + tab.grade" class="table-container columns has-w-full has-ml-0 has-mr-0"
-    :class="{ 'is-hidden': !tab.isActive }">
-    <table v-for="groupName in Object.keys(tab.data)" class="column has-mb-0">
-      <thead>
-        <tr>
-          <th class="has-p-2">№</th>
-          <th class="has-p-2">
-            <span @click="clearBufer(); copyName(groupName)">{{ groupName }}</span>
-            <div style="float: right;">
-              <span style="cursor: pointer;" @click="copyName('Відсутні:')">❌</span>
-              <span style="cursor: pointer;" @click="copyName('Прийшли:')">✅</span>
-            </div>
-          </th>
-          <th class="has-p-2">Статус</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="student in tab.data[groupName]">
-          <td class="has-p-2">{{ student.number }}</td>
-          <td class="has-p-2" style="display: flex; align-items: center;" @click="copyName(student.name)">
-            {{ student.name }}
-    
-          </td>
-          <td class="has-p-2 has-text-center tooltip">
-            <i :class="statuses[student.status][0]" style="font-size: 20px;"
-              :style="{ 'color': statuses[student.status][1] }"></i>
-            <span class="tooltiptext">{{ statuses[student.status][2] }}</span>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <HeaderComponent />
+  <RouterView />
 </template>
-<style>
-  .alert {
-    transition: opacity 0.5s ease-in-out;
-    opacity: 0;
-  }
-  .alert.show {
-    opacity: 1;
-  }
-
-  body.custom-cursor {
-    cursor: url(http://www.rw-designer.com/cursor-extern.php?id=14256), auto;
-  }
-</style>
