@@ -1,10 +1,12 @@
 <script setup>
 import { computed } from 'vue'
 import { useAttendanceStore } from '@/stores/attendanceData'
+import { useClipboardStore } from '@/stores/clipboard'
 
 const props = defineProps(['grade', 'groupName'])
 
 const attendanceStore = useAttendanceStore()
+const clipboardStore = useClipboardStore()
 
 const groupData = computed(() => {
   return attendanceStore.getGroupAttendance(props.grade, props.groupName)
@@ -33,14 +35,23 @@ const statuses = [
   },
 ]
 </script>
-
 <template>
   <table>
     <thead>
       <tr>
         <th class="has-p-2">№</th>
         <th class="has-p-2">
-          {{ props.groupName }}
+          <span @click="clipboardStore.clearAndAddToClipboard(props.groupName)">{{
+            props.groupName
+          }}</span>
+          <div style="float: right">
+            <span style="cursor: pointer" @click="clipboardStore.addToClipboard('Відсутні:')"
+              >❌</span
+            >
+            <span style="cursor: pointer" @click="clipboardStore.addToClipboard('Прийшли:')"
+              >✅</span
+            >
+          </div>
         </th>
         <th class="has-p-2">Статус</th>
       </tr>
@@ -48,7 +59,9 @@ const statuses = [
     <tbody>
       <tr v-for="(studentName, index) in Object.keys(groupData)" :key="studentName">
         <td class="has-p-2">{{ index + 1 }}</td>
-        <td class="has-p-2">{{ groupData[studentName].name }}</td>
+        <td class="has-p-2" @click="clipboardStore.addToClipboard(studentName)">
+          {{ studentName }}
+        </td>
         <td class="has-p-2 has-text-center tooltip">
           <i
             :class="statuses[groupData[studentName].status].class"
