@@ -28,6 +28,7 @@ export const useClipboardStore = defineStore('clipboard', () => {
     const alertDiv = document.createElement('div')
     alertDiv.className = 'alert has-mb-none'
     alertDiv.id = 'copy'
+    alertDiv.classList.add('alert')
     alertDiv.style.position = 'fixed'
     alertDiv.style.bottom = '10px'
     alertDiv.innerHTML = clipboard.value.replace(/\n/g, '<br>')

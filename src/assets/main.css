@@ -50,3 +50,7 @@ table img:hover {
   display: flex;
   flex-direction: row;
 }
+
+.alert {
+  z-index: 1000;
+}
