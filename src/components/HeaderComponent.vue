@@ -12,25 +12,15 @@ const dynamicGrade = computed(() => route.params.grade || attendanceStore.getGra
 </script>
 <template>
   <header class="tab-container is-flex has-direction-column-mobile has-bg-muted has-p-1">
-    <RouterLink
-      v-for="grade in grades"
-      :key="grade"
-      :to="`/grade/${grade}`"
-      :id="grade"
-      class="tab has-text-center has-h-8 navlink"
-      :class="{
+    <RouterLink v-for="grade in grades" :key="grade" :to="`/grade/${grade}`" :id="grade"
+      class="tab has-text-center has-h-8 navlink" :class="{
         'active has-bg-white has-text-primary':
           dynamicGrade === grade && route.path !== '/settings',
-      }"
-      >{{ grade + '-ті класи' }}</RouterLink
-    >
-    <RouterLink
-      to="/settings"
-      class="tab has-text-center has-h-8 navlink settings-button"
-      :class="{
-        'has-bg-white has-text-primary': route.path === '/settings',
-      }"
-      ><i class="si-bars"></i
-    ></RouterLink>
+      }">{{ grade + '-ті класи' }}</RouterLink>
+    <RouterLink to="/settings" class="tab has-text-center has-h-8 navlink settings-button" :class="{
+      'has-bg-white has-text-primary': route.path === '/settings',
+    }"><i class="si-bars"></i>
+      <i class="si-bars"></i>
+    </RouterLink>
   </header>
 </template>
