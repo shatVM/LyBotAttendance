@@ -31,7 +31,7 @@ const navigatoToGrade = (grade, group) => {
         'active has-bg-white has-text-primary':
           dynamicGrade === grade && route.path !== '/settings',
       }"
-      >{{ grade + '-ті класи'}}
+      ><span class="group-name">{{ grade + '-ті класи'}}</span>
       <span class="group-symbol" v-for="group in attendanceStore.getClasses(grade).reverse()" :key="group" @click="navigatoToGrade(grade, group)">
         {{ group.replace(grade+'-', '') }}
       </span>
