@@ -45,7 +45,7 @@ const statuses = [
       <tr>
         <th class="has-p-2">№</th>
         <th class="has-p-2">
-          <span @click="clipboardStore.clearAndAddToClipboard(props.groupName)">{{
+          <span @click="clipboardStore.clearAndAddToClipboard(props.groupName)" :id="props.groupName">{{
             props.groupName
           }}</span>
           <div style="float: right">
