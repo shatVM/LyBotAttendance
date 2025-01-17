@@ -20,11 +20,20 @@ export const useAttendanceStore = defineStore('attendance', () => {
     return attendanceData.value[grade][group]
   }
 
+  const getClasses = (grade) => {
+    const classes = []
+    for (const className in attendanceData.value[grade]) {
+      classes.push(className)
+    }
+    return classes
+  }
+
   return {
     attendanceData,
     setAttendanceData,
     getGrades,
     getGradeAttendance,
     getGroupAttendance,
+    getClasses,
   }
 })
