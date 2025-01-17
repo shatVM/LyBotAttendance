@@ -63,3 +63,9 @@ table img:hover {
   margin: 0 2px;
   float: right;
 }
+
+
+.group-name {
+  margin-left: 2px;
+  float: left;
+}
