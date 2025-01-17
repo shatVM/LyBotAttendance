@@ -8,8 +8,7 @@ const props = defineProps(['grade', 'groupName'])
 
 const attendanceStore = useAttendanceStore()
 const clipboardStore = useClipboardStore()
-const settingsStore = useSettingsStore() // Add settings store
-
+const settingsStore = useSettingsStore()
 const showAvatars = computed(() => settingsStore.getShowAvatars())
 
 const groupData = computed(() => {
@@ -74,6 +73,7 @@ const statuses = [
         </td>
         <td class="has-p-2 has-text-center tooltip">
           <i
+          class="status-icon"
             :class="statuses[groupData[studentName].status].class"
             style="font-size: 20px"
             :style="{ color: statuses[groupData[studentName].status].color }"
