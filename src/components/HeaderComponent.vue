@@ -1,14 +1,23 @@
 <script setup>
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAttendanceStore } from '../stores/attendanceData'
 
+
+const router = useRouter()
 const route = useRoute()
 const attendanceStore = useAttendanceStore()
 const grades = computed(() => attendanceStore.getGrades())
 
 const dynamicGrade = computed(() => route.params.grade || attendanceStore.getGrades()[0])
+
+const navigatoToGrade = (grade, group) => {
+  router.push('/grade/' + grade)
+  const element = document.getElementById(group)
+  element.scrollIntoView();
+}
+
 </script>
 <template>
   <header class="tab-container is-flex has-direction-column-mobile has-bg-muted has-p-1">
@@ -22,7 +31,11 @@ const dynamicGrade = computed(() => route.params.grade || attendanceStore.getGra
         'active has-bg-white has-text-primary':
           dynamicGrade === grade && route.path !== '/settings',
       }"
-      >{{ grade + '-ті класи' }}</RouterLink
+      ><span class="group-name">{{ grade + '-ті класи'}}</span>
+      <span class="group-symbol" v-for="group in attendanceStore.getClasses(grade).reverse()" :key="group" @click="navigatoToGrade(grade, group)">
+        {{ group.replace(grade+'-', '') }}
+      </span>
+      </RouterLink
     >
     <RouterLink
       to="/settings"

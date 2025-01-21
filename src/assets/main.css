@@ -54,3 +54,25 @@ table img:hover {
 .alert {
   z-index: 1000;
 }
+
+.group-symbol {
+  color: #000;
+  border: #000 1px solid;
+  border-radius: 5px;
+  padding: 0 5px;
+  margin: 0 2px;
+  float: right;
+}
+
+
+.group-name {
+  margin-left: 2px;
+  float: left;
+}
+
+
+header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
