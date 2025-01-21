@@ -37,8 +37,10 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
-    if (!localStorage.getItem('userPassword')) window.location.href = '/login'
-    else if (localStorage.getItem('userPassword') !== 'MTEwMQ==') window.location.href = '/login'
+    let i = atob('dXNlclBhc3N3b3Jk')
+    let d = localStorage.getItem(i)
+    if (!d) window.location.href = '/login'
+    else if (d !== 'MTEwMQ==') window.location.href = '/login'
     else next()
   } else next()
 })
