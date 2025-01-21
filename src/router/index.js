@@ -12,18 +12,35 @@ const router = createRouter({
       path: '/',
       name: 'homepage',
       component: GroupsView,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/grade/:grade',
       name: 'group',
       component: GroupsView,
+      meta: {
+        requiresAuth: true,
+      },
     },
     {
       path: '/settings',
       name: 'settings',
       component: SettingsView,
+      meta: {
+        requiresAuth: true,
+      },
     },
   ],
+})
+
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    if (!localStorage.getItem('user-password')) window.location.href = '/login'
+    else if (localStorage.getItem('user-password') !== 'MTEwMQ==') window.location.href = '/login'
+    else next()
+  } else next()
 })
 
 export default router

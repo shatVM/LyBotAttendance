@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Вхід</title>
+    <link rel="stylesheet" href="https://unpkg.com/siimple/siimple.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/siimple-icons/siimple-icons.css" />
+  </head>
+  <body>
+    <div class="container has-pt-16 has-pb-16">
+      <div class="has-mb-6 has-w-96 has-ml-auto has-mr-auto">
+        <h3>Спочатку треба увійти 🫨</h3>
+        <label class="label">Пароль</label>
+        <input type="password" class="input" placeholder="Password" id="loginPassword" />
+        <button class="button is-full has-mt-6" id="loginButton">
+          <i class="si-lock has-pr-1"></i>
+          <span>Увійти</span>
+        </button>
+      </div>
+    </div>
+    <script>
+      document.getElementById('loginButton').addEventListener('click', () => {
+        encodedPassword = btoa(document.getElementById('loginPassword').value)
+        localStorage.setItem('user-password', encodedPassword)
+        window.location.href = '/'
+      })
+    </script>
+  </body>
+</html>
