@@ -22,7 +22,7 @@
     <script>
       document.getElementById('loginButton').addEventListener('click', () => {
         encodedPassword = btoa(document.getElementById('loginPassword').value)
-        localStorage.setItem('user-password', encodedPassword)
+        localStorage.setItem('userPassword', encodedPassword)
         window.location.href = '/'
       })
     </script>
