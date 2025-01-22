@@ -40,7 +40,8 @@ router.beforeEach((to, from, next) => {
     let i = atob('dXNlclBhc3N3b3Jk')
     let d = localStorage.getItem(i)
     if (!d) window.location.href = '/login'
-    else if (d !== 'MTEwMQ==') window.location.href = '/login'
+    else if (btoa(d) !== 'M' + 'T' + 'E' + 'w' + 'M' + 'Q' + '=' + '=')
+      window.location.href = '/login'
     else next()
   } else next()
 })

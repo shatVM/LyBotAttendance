@@ -10,7 +10,7 @@
   <body>
     <div class="container has-pt-16 has-pb-16">
       <div class="has-mb-6 has-w-96 has-ml-auto has-mr-auto">
-        <h3>Спочатку треба увійти 🫨</h3>
+        <h3>Спочатку треба увійти</h3>
         <label class="label">Пароль</label>
         <input type="password" class="input" placeholder="Password" id="loginPassword" />
         <button class="button is-full has-mt-6" id="loginButton">
@@ -21,8 +21,7 @@
     </div>
     <script>
       document.getElementById('loginButton').addEventListener('click', () => {
-        encodedPassword = btoa(document.getElementById('loginPassword').value)
-        localStorage.setItem('userPassword', encodedPassword)
+        localStorage.setItem('userPassword', document.getElementById('loginPassword').value)
         window.location.href = '/'
       })
     </script>
